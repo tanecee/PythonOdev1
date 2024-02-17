@@ -1,0 +1,83 @@
+class Library:
+    def __init__(self):
+        self.file_path = "Books.txt"
+
+    def write_books(self, books):
+        with open(self.file_path, "w") as file:
+            for book in books:
+                file.write(f"{book['name']},{book['page_count']},{book['author']}\n")
+        print("Books have been written to the file.")
+
+    def read_books(self):
+        with open(self.file_path, "r") as file:
+            print("Books:")
+            for line in file:
+                name, page_count, author = line.strip().split(",")
+                print(f"Name: {name}, Page Count: {page_count}, Author: {author}")
+
+    def add_book(self):
+        title = input("Enter the title of the book: ")
+        author = input("Enter the author of the book: ")
+        pages = input("Enter the number of pages of the book: ")
+
+        with open(self.file_path, "r") as file:
+            existing_books = [line.strip().split(",")[0] for line in file]
+
+        if title in existing_books:
+            print("This book already exists in the library.")
+        else:
+            with open(self.file_path, "a") as file:
+                file.write(f"{title},{pages},{author}\n")
+            print(f"Book '{title}' added successfully.")
+
+    def remove_book(self):
+        title_to_remove = input("Enter the title of the book to remove: ")
+
+        with open(self.file_path, "r") as file:
+            books = file.readlines()
+
+        updated_books = [book for book in books if title_to_remove not in book]
+
+        with open(self.file_path, "w") as file:
+            file.writelines(updated_books)
+
+        print(f"Book '{title_to_remove}' removed successfully.")
+
+    def list_books(self):
+        with open(self.file_path, "r") as file:
+            print("Books:")
+            for line in file:
+                name, page_count, author = line.strip().split(",")
+                print(f"Name: {name}, Page Count: {page_count}, Author: {author}")
+
+
+lib = Library()
+
+initial_books = [
+    {"name": "Suç ve Ceza", "page_count": "600", "author": "Fyodor Dostoevsky"},
+    {"name": "1984", "page_count": "328", "author": "George Orwell"},
+    {"name": "Martın Eden", "page_count": "460", "author": "j. London"}
+]
+
+lib.write_books(initial_books)
+
+while True:
+    print("*** MENU ***")
+    print("1) List Books")
+    print("2) Add Book")
+    print("3) Remove Book")
+    print("4) Exit")
+
+    choice = input("Enter your choice (1-4): ")
+
+    if choice == "1":
+        lib.list_books()
+    elif choice == "2":
+        lib.add_book()
+    elif choice == "3":
+        lib.remove_book()
+    elif choice == "4":
+        print("Exiting program.")
+        break
+    else:
+        print("Invalid choice. Please enter a number from 1 to 4.")
